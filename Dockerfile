@@ -4,6 +4,10 @@ FROM denoland/deno:alpine-1.39.2
 # 设置工作目录
 WORKDIR /app
 
+# 设置Deno中国镜像源
+ENV DENO_DIR=/app/.deno
+ENV DENO_MIRROR=https://mirror.deno.com/
+
 # 复制项目文件到容器
 COPY . .
 
@@ -11,6 +15,9 @@ COPY . .
 ENV OPENROUTER_API_KEY=""
 ENV MODELSCOPE_API_KEY=""
 ENV MODELSCOPE_BASE_URL="https://api-inference.modelscope.cn/" 
+
+# 预缓存依赖（使用镜像源）
+RUN deno cache --reload main.ts
 
 # 对 Deno 进行权限声明
 # --allow-env 允许访问环境变量
